@@ -1,0 +1,52 @@
+# Install samba
+
+##### As usual make sure to update before installing new software
+
+Install command:
+```
+sudo apt install samba -y
+```
+
+Edit the configuration file:
+```
+sudo nano /etc/samba/smb.conf
+```
+
+At the end of the file add the folder and configuration, here's an example with full folder access for a user, replace the config with your needs 
+```
+[shared_folder_name]
+    path = /path/to/folder
+    available = yes
+    valid users = youruser
+    read only = no
+    browsable = yes
+    public = no
+    writable = yes
+```
+
+Set the permissions:
+```
+sudo chown -R youruser:youruser /path/to/folder
+sudo chmod -R 755 /path/to/folder
+```
+
+Add samba user:
+```
+sudo smbpasswd -a youruser
+```
+
+Restart samba services and add an exapcion to firewall:
+```
+sudo systemctl restart smbd
+sudo systemctl restart nmbd
+sudo ufw allow samba
+```
+
+<hr>
+
+That should be it, now you should be able to access to the folder remotely.
+
+Windows:
+```
+\\<machine_ip>\shared_folder_name
+```
